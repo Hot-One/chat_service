@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      body {
+        margin: 0;
+        padding-bottom: 3rem;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+      }
+
+      #form {
+        background: rgba(0, 0, 0, 0.15);
+        padding: 0.25rem;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        height: 3rem;
+        box-sizing: border-box;
+        backdrop-filter: blur(10px);
+      }
+      #input {
+        border: none;
+        padding: 0 1rem;
+        flex-grow: 1;
+        border-radius: 2rem;
+        margin: 0.25rem;
+      }
+      #input:focus {
+        outline: none;
+      }
+      #form > button {
+        background: #333;
+        border: none;
+        padding: 0 1rem;
+        margin: 0.25rem;
+        border-radius: 3px;
+        outline: none;
+        color: #fff;
+      }
+
+      #messages {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+      #messages > li {
+        padding: 0.5rem 1rem;
+      }
+      #messages > li:nth-child(odd) {
+        background: #efefef;
+      }
+      
+      /* Стили для превью ссылок */
+      .link-preview {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 12px;
+        margin: 8px 0;
+        display: flex;
+        background: #f5f5f5;
+        text-decoration: none;
+        color: inherit;
+        transition: box-shadow 0.2s;
+      }
+      
+      .link-preview:hover {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+      
+      .link-preview-image {
+        width: 120px;
+        height: 90px;
+        object-fit: cover;
+        border-radius: 4px;
+        margin-right: 12px;
+        flex-shrink: 0;
+      }
+      
+      .link-preview-content {
+        flex: 1;
+        overflow: hidden;
+      }
+      
+      .link-preview-title {
+        font-weight: bold;
+        margin-bottom: 4px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      
+      .link-preview-description {
+        font-size: 14px;
+        color: #666;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+      
+      .link-preview-site {
+        font-size: 12px;
+        color: #999;
+        margin-top: 4px;
+      }
+    </style>
+    <!-- <script src="/socket.io.min.js"></script> -->
+    <script
+      src="https://cdn.socket.io/4.8.1/socket.io.min.js"
+      integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <form id="form" action="">
+      <input id="input" autocomplete="off" /><button>Send</button>
+    </form>
+    <script>
+      var socket = io("/", {
+        transports: ["websocket"], // Эта библиотека поддерживает только WebSocket
+      });
+
+      var messages = document.getElementById("messages");
+      var form = document.getElementById("form");
+      var input = document.getElementById("input");
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (input.value) {
+          socket.emit("chat message", input.value);
+          input.value = "";
+        }
+      });
+
+      socket.on("chat message", function (msg) {
+        var item = document.createElement("li");
+        item.textContent = "Root nps: " + msg;
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+
+      socket.on("connect", () => {
+        var item = document.createElement("li");
+        messages.appendChild(item);
+        socket.emit("connected");
+      });
+      
+      // Обработчик для превью ссылок
+      socket.on("link preview", function (preview) {
+        var item = document.createElement("li");
+        
+        // Создаём HTML для превью
+        var previewHtml = `
+          <a href="${preview.url}" target="_blank" class="link-preview">
+            ${preview.image ? `<img src="${preview.image}" alt="${preview.title}" class="link-preview-image">` : ''}
+            <div class="link-preview-content">
+              <div class="link-preview-title">${preview.title || 'Без заголовка'}</div>
+              ${preview.description ? `<div class="link-preview-description">${preview.description}</div>` : ''}
+              ${preview.siteName ? `<div class="link-preview-site">${preview.siteName}</div>` : ''}
+            </div>
+          </a>
+        `;
+        
+        item.innerHTML = previewHtml;
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+    </script>
+  </body>
+</html>

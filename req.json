@@ -1,0 +1,15 @@
+{
+    "time": "2025-09-03T17:52:15.146390922+05:00",
+    "id": "",
+    "remote_ip": "::1",
+    "host": "localhost:3300",
+    "method": "GET",
+    "uri": "/socket.io/?EIO=4&transport=websocket",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "status": 403,
+    "error": "",
+    "latency": 103975,
+    "latency_human": "103.975µs",
+    "bytes_in": 0,
+    "bytes_out": 10
+}
