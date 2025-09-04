@@ -66,9 +66,14 @@ const newRoomName = ref("");
 const newRoomDescription = ref("");
 
 const socket = io(
-  "http://localhost:3300/", 
+  // "https://api.logistics.sriss.uz/",
+  // "http://localhost:3300/", 
+  "http://localhost:8080/", 
   {
     transports: ["websocket"],
+    auth: {
+      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxMSwicm9sZUlkIjoxLCJvcmdJZCI6MSwic29hdG9JZCI6MTcsImlzQWRtaW4iOnRydWV9LCJleHAiOjE3NTcwMjUxMzIsIm5iZiI6MTc1Njk4OTEzMiwiaWF0IjoxNzU2OTg5MTMyLCJqdGkiOiIxMSJ9.BJRuINX0xXowW6ToGPac44DomuimIcmCnucc6mUuNrc",
+    },
   }
 );
 
