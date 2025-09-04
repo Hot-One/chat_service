@@ -441,7 +441,6 @@ func usingWithGoFiber(db *gorm.DB) {
 			})
 		}
 
-		// Создаем URL для доступа к файлу
 		fileURL := fmt.Sprintf("http://localhost:3300/uploads/%s", fileName)
 
 		uploadedFile := UploadedFile{
@@ -456,7 +455,6 @@ func usingWithGoFiber(db *gorm.DB) {
 
 	app.Use(cors.New())
 
-	// app.Use("/", io.FiberMiddleware)
 	app.Route("/socket.io", io.FiberRoute)
 
 	fmt.Println("🚀 Fiber server listening on port 3300...")
